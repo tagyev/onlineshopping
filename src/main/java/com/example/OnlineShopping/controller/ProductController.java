@@ -1,9 +1,6 @@
 package com.example.OnlineShopping.controller;
 
-import com.example.OnlineShopping.dto.BuyingRequest;
-import com.example.OnlineShopping.dto.PaymentResponse;
-import com.example.OnlineShopping.dto.ProductRequest;
-import com.example.OnlineShopping.dto.ProductResponse;
+import com.example.OnlineShopping.dto.*;
 import com.example.OnlineShopping.service.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,11 @@ public class ProductController {
     @GetMapping("/payment")
     public PaymentResponse payment() {
         return service.payment();
+    }
+
+    @GetMapping("/show")
+    public List<ProductEntity> showProducts(){
+        return service.showProducts();
     }
 
 

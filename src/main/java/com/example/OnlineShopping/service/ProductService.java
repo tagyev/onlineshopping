@@ -60,6 +60,9 @@ public class ProductService {
                 BigDecimal price = product.getPrice().multiply(BigDecimal.valueOf(quality));
                 productName.add(product.getName());
                 totalPrice = totalPrice.add(price);
+                // store mapdan çıx məhsulu
+                store.get(id).setQuantity(store.get(id).getQuantity()-quality);
+
             }
         }
 
@@ -70,8 +73,26 @@ public class ProductService {
             balance = balance.subtract(totalPrice);
         }
 
+
+
+
+
+
         card.clear();
         return new PaymentResponse(totalPrice, balance, productName);
+    }
+
+    public List<ProductEntity> showProducts(){
+        List<ProductEntity> show = new ArrayList<>();
+        for (ProductEntity entity : store.values()) {
+            show.add(new ProductEntity(
+                    entity.getId(),
+                    entity.getName(),
+                    entity.getPrice(),
+                    entity.getQuantity()
+            ));
+        }
+        return show;
     }
 
 
