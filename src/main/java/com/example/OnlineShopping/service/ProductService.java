@@ -58,7 +58,7 @@ public class ProductService {
                 throw new RuntimeException("Heç bir məhsul seçilməyib !");
             } else {
                 BigDecimal price = product.getPrice().multiply(BigDecimal.valueOf(quality));
-                productName.add(product.getName());
+                productName.add(product.getName() +" - "+ quality +" x " + product.getPrice());
                 totalPrice = totalPrice.add(price);
                 // store mapdan çıx məhsulu
                 store.get(id).setQuantity(store.get(id).getQuantity()-quality);
