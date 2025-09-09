@@ -72,7 +72,6 @@ public class ProductService {
                 Integer quality = entry.getValue();
                 ProductEntity product = store.get(id);
                 store.get(id).setQuantity(store.get(id).getQuantity() - quality);
-
             }
         }
         card.clear();
