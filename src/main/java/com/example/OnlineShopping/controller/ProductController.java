@@ -18,9 +18,8 @@ public class ProductController {
     final ProductService service;
 
     @PostMapping("/products")
-    public Map<Long, ProductEntity> saveProductsToStore(@RequestBody List<ProductRequest> marketEnter) {
-        return service.saveProductsToStore(marketEnter);
-    }
+    public List<ProductResponse> saveProductsToStore(@RequestBody List<ProductRequest> marketEnter) {
+        return service.saveProductsToStore(marketEnter);}
 
     @PostMapping("/card")
     public boolean addProductsToCart(@RequestBody BuyingRequest buy) {

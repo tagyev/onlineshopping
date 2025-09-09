@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +21,15 @@ public class ProductService {
     static BigDecimal balance = new BigDecimal("500.00");
 
 
-    public Map<Long, ProductEntity> saveProductsToStore(List<ProductRequest> marketEnter) {
+    public List<ProductResponse> saveProductsToStore(List<ProductRequest> marketEnter) {
         for (ProductRequest request : marketEnter) {
             Long id = productIdGenerator++;
             ProductEntity entity = new ProductEntity(id, request.getName(), request.getPrice(), request.getQuantity());
             store.put(id, entity);
         }
-        return store;
+        return store.values().stream()
+                .map(e->new ProductResponse(e.getId(), e.getName(), e.getPrice(), e.getQuantity()))
+                .collect(Collectors.toList());
     }
 
     public boolean addProductsToCart(BuyingRequest buy) {
