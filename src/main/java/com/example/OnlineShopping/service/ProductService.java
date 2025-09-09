@@ -20,16 +20,13 @@ public class ProductService {
     static BigDecimal balance = new BigDecimal("500.00");
 
 
-    public List<ProductResponse> saveProductsToStore(List<ProductRequest> marketEnter) {
-        List<ProductResponse> responses = new ArrayList<>();
+    public Map<Long, ProductEntity> saveProductsToStore(List<ProductRequest> marketEnter) {
         for (ProductRequest request : marketEnter) {
             Long id = productIdGenerator.getAndIncrement();
             ProductEntity entity = new ProductEntity(id, request.getName(), request.getPrice(), request.getQuantity());
-            ProductResponse response = new ProductResponse(entity.getId(), entity.getName(), entity.getPrice(), entity.getQuantity());
             store.put(id, entity);
-            responses.add(response);
         }
-        return responses;
+        return store;
     }
 
     public boolean addProductsToCart(BuyingRequest buy) {
@@ -60,9 +57,6 @@ public class ProductService {
                 BigDecimal price = product.getPrice().multiply(BigDecimal.valueOf(quality));
                 productName.add(product.getName() +" - "+ quality +" x " + product.getPrice());
                 totalPrice = totalPrice.add(price);
-                // store mapdan çıx məhsulu
-                store.get(id).setQuantity(store.get(id).getQuantity()-quality);
-
             }
         }
 
@@ -71,26 +65,23 @@ public class ProductService {
             throw new RuntimeException("Balansınızda kifayət qədər məbləğ yoxdur! ");
         } else {
             balance = balance.subtract(totalPrice);
+
+            // store mapdan çıx məhsulu
+            for (Map.Entry<Long, Integer> entry : card.entrySet()) {
+                Long id = entry.getKey();
+                Integer quality = entry.getValue();
+                ProductEntity product = store.get(id);
+                store.get(id).setQuantity(store.get(id).getQuantity() - quality);
+            }
         }
-
-
-
-
-
-
         card.clear();
         return new PaymentResponse(totalPrice, balance, productName);
     }
 
-    public List<ProductEntity> showProducts(){
-        List<ProductEntity> show = new ArrayList<>();
+    public List<String> showProducts(){
+        List<String> show = new ArrayList<>();
         for (ProductEntity entity : store.values()) {
-            show.add(new ProductEntity(
-                    entity.getId(),
-                    entity.getName(),
-                    entity.getPrice(),
-                    entity.getQuantity()
-            ));
+            show.add(entity.getName() +" - "+ entity.getQuantity() + " + "+ entity.getPrice());
         }
         return show;
     }

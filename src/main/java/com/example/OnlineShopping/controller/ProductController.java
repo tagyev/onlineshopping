@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/store")
@@ -17,7 +18,7 @@ public class ProductController {
     final ProductService service;
 
     @PostMapping("/products")
-    public List<ProductResponse> saveProductsToStore(@RequestBody List<ProductRequest> marketEnter) {
+    public Map<Long, ProductEntity> saveProductsToStore(@RequestBody List<ProductRequest> marketEnter) {
         return service.saveProductsToStore(marketEnter);
     }
 
@@ -32,7 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/show")
-    public List<ProductEntity> showProducts(){
+    public List<String> showProducts(){
         return service.showProducts();
     }
 
