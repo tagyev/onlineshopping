@@ -16,13 +16,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProductService {
     final Map<Long, ProductEntity> store = new HashMap<>();
     final Map<Long, Integer> card = new HashMap<>();
-    final AtomicLong productIdGenerator = new AtomicLong(1);
+     static Long productIdGenerator = 1L;
     static BigDecimal balance = new BigDecimal("500.00");
 
 
     public Map<Long, ProductEntity> saveProductsToStore(List<ProductRequest> marketEnter) {
         for (ProductRequest request : marketEnter) {
-            Long id = productIdGenerator.getAndIncrement();
+            Long id = productIdGenerator++;
             ProductEntity entity = new ProductEntity(id, request.getName(), request.getPrice(), request.getQuantity());
             store.put(id, entity);
         }
@@ -55,7 +55,7 @@ public class ProductService {
                 throw new RuntimeException("Heç bir məhsul seçilməyib !");
             } else {
                 BigDecimal price = product.getPrice().multiply(BigDecimal.valueOf(quality));
-                productName.add(product.getName() +" - "+ quality +" x " + product.getPrice());
+                productName.add(product.getName() + " - " + quality + " x " + product.getPrice());
                 totalPrice = totalPrice.add(price);
             }
         }
@@ -72,16 +72,17 @@ public class ProductService {
                 Integer quality = entry.getValue();
                 ProductEntity product = store.get(id);
                 store.get(id).setQuantity(store.get(id).getQuantity() - quality);
+
             }
         }
         card.clear();
         return new PaymentResponse(totalPrice, balance, productName);
     }
 
-    public List<String> showProducts(){
+    public List<String> showProducts() {
         List<String> show = new ArrayList<>();
         for (ProductEntity entity : store.values()) {
-            show.add(entity.getName() +" - "+ entity.getQuantity() + " + "+ entity.getPrice());
+            show.add(entity.getName() + " - " + entity.getQuantity() + " + " + entity.getPrice());
         }
         return show;
     }
